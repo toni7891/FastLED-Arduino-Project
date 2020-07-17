@@ -59,13 +59,13 @@ loop for main events
 */
 void loop()
 {
-    rainbowWaveLoop();      // Rainbow effect DONE!
+    rainbowWave();      // Rainbow effect DONE!
     // rainbowFireBall();   temporarily not working
-    // rainbowFade();       temporarily not working
+
 }
 
 //define event rainbowWave1
-void rainbowWaveLoop()
+void rainbowWave()
 {
     // Cycle hue
     for (int i = 0; i < HUE; i++)
@@ -84,90 +84,6 @@ void rainbowWaveLoop()
         delay(SPEED); // The lower the value the faster the wave move's (and vice versa)
     }
 }
-
-//define event rainbowFade2
-void rainbowFade()
-{
-    while (TRUE)
-    {
-        //decrasing HUE after one loop
-        if (r == HUE && g == HUE && b == HUE)
-        {
-            for (r = HUE; r > -1; r -= HUE_STEP)
-            {
-                checkLedOverRide(int currentLed);
-                leds[currentLed] = CRGB(r, g, b);
-                FastLED.show();
-                delay(SPEED);
-                currentLed++;
-            }
-
-            for (g = HUE; g > -1; g -= HUE_STEP)
-            {
-                checkLedOverRide(int currentLed);
-                leds[currentLed] = CRGB(r, g, b);
-                FastLED.show();
-                delay(SPEED);
-                currentLed++;
-
-            }
-
-            for (b = HUE; b > -1; b -= HUE_STEP)
-            {
-                checkLedOverRide(int currentLed);
-                leds[currentLed] = CRGB(r, g, b);
-                FastLED.show();
-                delay(SPEED);
-                currentLed++;
-            }
-        }
-
-        else if (r == 0 && g == 0 && b == 0)
-        {
-            // incresing HUE
-            for (r = 0; r < (HUE + 1); r += HUE_STEP)
-            {
-                checkLedOverRide(int currentLed);
-                
-                leds[currentLed] = CRGB(r, g, b);
-                FastLED.show();
-                delay(SPEED);
-                currentLed++;
-            }
-
-            for (g = 0; g < (HUE + 1); g += HUE_STEP)
-            {
-                checkLedOverRide(int currentLed);
-                leds[currentLed] = CRGB(r, g, b);
-                FastLED.show();
-                delay(SPEED);
-                currentLed++;
-            }
-
-            for (b = 0; b < (HUE + 1); b += HUE_STEP)
-            {
-                checkLedOverRide(int currentLed);
-                leds[currentLed] = CRGB(r, g, b);
-                FastLED.show();
-                delay(SPEED);
-                currentLed++;
-            }
-        }
-    } 
-}
-
-/*
-If current LED is the last one in the array, the next current LED will be the first LED in the array 
-USAGE: To avoid Buffer Over Flow [to avoid exiting outside the array memory range]
-*/
-void checkLedOverRide(int currentLed)
-{
-    if (currentLed == NUM_LEDS + 1)
-    {
-        currentLed = 0;
-    }
-}
-
 
 
 void rainbowFireBall()
