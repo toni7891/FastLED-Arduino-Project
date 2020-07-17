@@ -59,7 +59,9 @@ loop for main events
 */
 void loop()
 {
-    rainbowFade();
+    rainbowWaveLoop();      // Rainbow effect DONE!
+    // rainbowFireBall();   temporarily not working
+    // rainbowFade();       temporarily not working
 }
 
 //define event rainbowWave1
@@ -167,10 +169,11 @@ void checkLedOverRide(int currentLed)
 }
 
 
-/*
+
 void rainbowFireBall()
 {
     int repeat = 0;
+    int hue
     while (repeat == 10)
     {
         for (int i = 0; i < NUM_LEDS - 1; i++)
@@ -193,4 +196,4 @@ void rainbowFireBall()
         repeat++;
     }
 }
-*/
+
