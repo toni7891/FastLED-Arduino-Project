@@ -35,7 +35,13 @@ coded by:
 #define HUE_STEP 1     [less big step to change r || g || b every 255 LED's] - VERY SLOW
 */
 
+//define global variabel's
 CRGB leds[NUM_LEDS]; // define the array of the LED's
+int currentLed = 0;  // define current led to index the led in the array in loop
+int r = 0;
+int g = 0;
+int b = 0;
+
 
 /*
 Setup the parmeters of the led strip for the library    
@@ -79,11 +85,6 @@ void rainbowWaveLoop()
 //define event rainbowFade2
 void rainbowFade()
 {
-    int currentLed = 0;
-    int r = 0;
-    int g = 0;
-    int b = 0;
-
     while (TRUE)
     {
         //decrasing HUE after one loop
@@ -91,100 +92,28 @@ void rainbowFade()
         {
             for (r = HUE; r > 0;)
             {
-                if (currentLed == NUM_LEDS)
-                {
-                    currentLed = 0;
-                }
-
-                else
-                {
-                    r -= HUE_STEP;
-                    leds[currentLed] = CRGB(r, g, b);
-                    FastLED.show();
-                    delay(SPEED);
-                    currentLed++;
-                }
-            }
-
-            for (g = HUE; g > 0;)
-            {
-                if (currentLed == NUM_LEDS)
-                {
-                    currentLed = 0;
-                }
-
-                else
-                {
-                    g += HUE_STEP;
-                    leds[currentLed] = CRGB(r, g, b);
-                    FastLED.show();
-                    delay(SPEED);
-                    currentLed++;
-                }
-            }
-
-            for (b = HUE; b > 0;)
-            {
-                if (currentLed == NUM_LEDS)
-                {
-                    currentLed = 0;
-                }
-
-                else
-                {
-                    b += HUE_STEP;
-                    leds[currentLed] = CRGB(r, g, b);
-                    FastLED.show();
-                    delay(SPEED);
-                    currentLed++;
-                }
-            }
-        }
-
-        // incresing HUE
-        for (r = 0; r != HUE;)
-        {
-            if (currentLed == NUM_LEDS)
-            {
-                currentLed = 0;
-            }
-
-            else
-            {
-                r += HUE_STEP;
+                checkLedOverRide(int currentLed);
+                r -= HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
                 currentLed++;
             }
-        }
 
-        for (g = 0; g != HUE;)
-        {
-            if (currentLed == NUM_LEDS)
+            for (g = HUE; g > 0;)
             {
-                currentLed = 0;
-            }
-
-            else
-            {
+                checkLedOverRide(int currentLed);
                 g += HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
                 currentLed++;
-            }
-        }
 
-        for (b = 0; b != HUE;)
-        {
-            if (currentLed == NUM_LEDS)
-            {
-                currentLed = 0;
             }
 
-            else
+            for (b = HUE; b > 0;)
             {
+                checkLedOverRide(int currentLed);
                 b += HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
@@ -192,8 +121,66 @@ void rainbowFade()
                 currentLed++;
             }
         }
+
+        else if (r == 0 && g == 0 && b == 0)
+        {
+            // incresing HUE
+            for (r = 0; r != HUE;)
+            {
+                checkLedOverRide(int currentLed);
+                r += HUE_STEP;
+                leds[currentLed] = CRGB(r, g, b);
+                FastLED.show();
+                delay(SPEED);
+                currentLed++;
+            }
+
+            for (g = 0; g != HUE;)
+            {
+                checkLedOverRide(int currentLed);
+                g += HUE_STEP;
+                leds[currentLed] = CRGB(r, g, b);
+                FastLED.show();
+                delay(SPEED);
+                currentLed++;
+            }
+
+            for (b = 0; b != HUE;)
+            {
+                checkLedOverRide(int currentLed);
+                b += HUE_STEP;
+                leds[currentLed] = CRGB(r, g, b);
+                FastLED.show();
+                delay(SPEED);
+                currentLed++;
+            
+            }
+        }
     } 
 }
+
+/*
+If current LED is the last one in the array, the next current LED will be the first LED in the array 
+USAGE: To avoid Buffer Over Flow [to avoid exiting outside the array memory range]
+*/
+void checkLedOverRide(int currentLed)
+{
+    if (currentLed == NUM_LEDS)
+    {
+        currentLed = 0;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 void rainbowFireBall()
