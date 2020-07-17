@@ -16,12 +16,22 @@ coded by:
 
 #include <FastLED.h>
 
-#define NUM_LEDS 301      // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ]
+#define NUM_LEDS 301      // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
 #define DATA_PIN 3        // Change later when arduino arrives      
 #define LED_TYPE WS2812B  // Type of the LED strip
 #define BRIGHTNESS 255    // MIN [0 -> 255] MAX
 #define SATURATION 255    // MIN [0 -> 255] MAX
-#define HUE 255           // HUE to cycle throw in the RainbowWaveLoop
+#define HUE 255           // to cycle throw HUE
+#define SPEED 25          // Speed of the animation
+#define HUE_STEP 5        // [step to change r || g || b every 51 LED's] bigger step faster HUE repeat in less LED's. Step must me HUE_STEP / HUE = SOLID NUMBEr (without ".num")
+
+/*
+        HUE_STEP is how fast the rainbow changes the gamma of rgb
+        ---------------------------------------------------------
+
+#define HUE_STEP 17    [more bigger step to change r || g || b every 15 LED's] - VERY FAST
+#define HUE_STEP 1     [less big step to change r || g || b every 255 LED's] - VERY SLOW
+*/
 
 CRGB leds[NUM_LEDS]; // define the array of the LED's
 
@@ -36,11 +46,14 @@ void setup()
 }
 
 /*
-loop for main event "RAINBOW WAVE"
-input: parameter's of the LED strip and the color settings
-output: NOW color grade and parameter's of the color 
+loop for main events 
 */
+void loop()
+{
 
+}
+
+//define event rainbowWave1
 void rainbowWaveLoop()
 {
     // Cycle hue
@@ -57,6 +70,153 @@ void rainbowWaveLoop()
         FastLED.show();
 
         // FADE Speed
-        delay(25); // The lower the value the faster the wave move's (and vice versa)
+        delay(SPEED); // The lower the value the faster the wave move's (and vice versa)
     }
 }
+
+//define event rainbowFade2
+void rainbowFade()
+{
+    int currentLed = 0;
+    int r = 0;
+    int g = 0;
+    int b = 0;
+
+    while (TRUE)
+    {
+        //decrasing HUE after one loop
+        if (r == HUE && g == HUE && b == HUE)
+        {
+            for (r != 0;)
+            {
+                if (currentLed == NUM_LEDS)
+                {
+                    currentLed = 0;
+                }
+
+                else
+                {
+                    r -= HUE_STEP;
+                    leds[currentLed] = CRGB(r, g, b);
+                    FastLED.show();
+                    delay(SPEED);
+                    currentLed++;
+                }
+            }
+
+            for (g != 0;)
+            {
+                if (currentLed == NUM_LEDS)
+                {
+                    currentLed = 0;
+                }
+
+                else
+                {
+                    g += HUE_STEP;
+                    leds[currentLed] = CRGB(r, g, b);
+                    FastLED.show();
+                    delay(SPEED);
+                    currentLed++;
+                }
+            }
+
+            for (b != 0;)
+            {
+                if (currentLed == NUM_LEDS)
+                {
+                    currentLed = 0;
+                }
+
+                else
+                {
+                    b += HUE_STEP;
+                    leds[currentLed] = CRGB(r, g, b);
+                    FastLED.show();
+                    delay(SPEED);
+                    currentLed++;
+                }
+            }
+        }
+
+        // incresing HUE
+        for (r = 0; r != HUE;)
+        {
+            if (currentLed == NUM_LEDS)
+            {
+                currentLed = 0;
+            }
+
+            else
+            {
+                r += HUE_STEP;
+                leds[currentLed] = CRGB(r, g, b);
+                FastLED.show();
+                delay(SPEED);
+                currentLed++;
+            }
+        }
+
+        for (g = 0; g != HUE;)
+        {
+            if (currentLed == NUM_LEDS)
+            {
+                currentLed = 0;
+            }
+
+            else
+            {
+                g += HUE_STEP;
+                leds[currentLed] = CRGB(r, g, b);
+                FastLED.show();
+                delay(SPEED);
+                currentLed++;
+            }
+        }
+
+        for (b = 0; b != HUE;)
+        {
+            if (currentLed == NUM_LEDS)
+            {
+                currentLed = 0;
+            }
+
+            else
+            {
+                b += HUE_STEP;
+                leds[currentLed] = CRGB(r, g, b);
+                FastLED.show();
+                delay(SPEED);
+                currentLed++;
+            }
+        }
+    } 
+}
+
+/*
+void rainbowFireBall()
+{
+    int repeat = 0;
+    while (repeat == 10)
+    {
+        for (int i = 0; i < NUM_LEDS - 1; i++)
+        {
+            hue += 15;
+            leds(i, i + 5).fill_rainbow(hue);
+            fadeToBlackBy(leds, NUM_LEDS, 150);
+            FastLED.show();
+            delay(100);
+        }
+
+        for (int j = NUM_LEDS; j != 0; j--)
+        {
+            hue += 15;
+            leds(j, j + 5).fill_rainbow(hue);
+            fadeToBlackBy(leds, NUM_LEDS, 150);
+            FastLED.show();
+            delay(100);
+        }
+        repeat++;
+    }
+}
+*/
