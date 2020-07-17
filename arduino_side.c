@@ -16,6 +16,8 @@ coded by:
 
 #include <FastLED.h>
 
+#define FALSE 0
+#define TRUE !FALSE
 #define NUM_LEDS 301      // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
 #define DATA_PIN 3        // Change later when arduino arrives      
 #define LED_TYPE WS2812B  // Type of the LED strip
@@ -50,7 +52,7 @@ loop for main events
 */
 void loop()
 {
-
+    rainbowFade();
 }
 
 //define event rainbowWave1
@@ -87,7 +89,7 @@ void rainbowFade()
         //decrasing HUE after one loop
         if (r == HUE && g == HUE && b == HUE)
         {
-            for (r != 0;)
+            for (r = HUE; r > 0;)
             {
                 if (currentLed == NUM_LEDS)
                 {
@@ -104,7 +106,7 @@ void rainbowFade()
                 }
             }
 
-            for (g != 0;)
+            for (g = HUE; g > 0;)
             {
                 if (currentLed == NUM_LEDS)
                 {
@@ -121,7 +123,7 @@ void rainbowFade()
                 }
             }
 
-            for (b != 0;)
+            for (b = HUE; b > 0;)
             {
                 if (currentLed == NUM_LEDS)
                 {
