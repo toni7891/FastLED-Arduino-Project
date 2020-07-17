@@ -18,10 +18,10 @@ coded by:
 
 #define FALSE 0
 #define TRUE !FALSE
-#define NUM_LEDS 301      // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
+#define NUM_LEDS 300     // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
 #define DATA_PIN 3        // Change later when arduino arrives      
 #define LED_TYPE WS2812B  // Type of the LED strip
-#define BRIGHTNESS 255    // MIN [0 -> 255] MAX
+#define BRIGHTNESS 120   // MIN [0 -> 255] MAX
 #define SATURATION 255    // MIN [0 -> 255] MAX
 #define HUE 255           // to cycle throw HUE
 #define SPEED 25          // Speed of the animation
@@ -51,6 +51,7 @@ output: None
 void setup() 
 {
     FastLED.addLeds<LED_TYPE, DATA_PIN>(leds, NUM_LEDS);
+    FastLED.setBrightness(BRIGHTNESS);
 }
 
 /*
@@ -90,20 +91,18 @@ void rainbowFade()
         //decrasing HUE after one loop
         if (r == HUE && g == HUE && b == HUE)
         {
-            for (r = HUE; r > 0;)
+            for (r = HUE; r > -1; r -= HUE_STEP)
             {
                 checkLedOverRide(int currentLed);
-                r -= HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
                 currentLed++;
             }
 
-            for (g = HUE; g > 0;)
+            for (g = HUE; g > -1; g -= HUE_STEP)
             {
                 checkLedOverRide(int currentLed);
-                g += HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
@@ -111,10 +110,9 @@ void rainbowFade()
 
             }
 
-            for (b = HUE; b > 0;)
+            for (b = HUE; b > -1; b -= HUE_STEP)
             {
                 checkLedOverRide(int currentLed);
-                b += HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
@@ -125,35 +123,32 @@ void rainbowFade()
         else if (r == 0 && g == 0 && b == 0)
         {
             // incresing HUE
-            for (r = 0; r != HUE;)
+            for (r = 0; r < (HUE + 1); r += HUE_STEP)
             {
                 checkLedOverRide(int currentLed);
-                r += HUE_STEP;
+                
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
                 currentLed++;
             }
 
-            for (g = 0; g != HUE;)
+            for (g = 0; g < (HUE + 1); g += HUE_STEP)
             {
                 checkLedOverRide(int currentLed);
-                g += HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
                 currentLed++;
             }
 
-            for (b = 0; b != HUE;)
+            for (b = 0; b < (HUE + 1); b += HUE_STEP)
             {
                 checkLedOverRide(int currentLed);
-                b += HUE_STEP;
                 leds[currentLed] = CRGB(r, g, b);
                 FastLED.show();
                 delay(SPEED);
                 currentLed++;
-            
             }
         }
     } 
@@ -165,21 +160,11 @@ USAGE: To avoid Buffer Over Flow [to avoid exiting outside the array memory rang
 */
 void checkLedOverRide(int currentLed)
 {
-    if (currentLed == NUM_LEDS)
+    if (currentLed == NUM_LEDS + 1)
     {
         currentLed = 0;
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 /*
