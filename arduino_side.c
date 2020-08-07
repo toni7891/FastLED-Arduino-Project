@@ -16,29 +16,15 @@ coded by:
 
 #include <FastLED.h>
 
-<<<<<<< HEAD
-#define NUM_LEDS 300      // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ]
-#define DATA_PIN 6         // Change later when arduino arrives      
-=======
 #define FALSE 0
 #define TRUE !FALSE
 #define NUM_LEDS 300     // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
 #define DATA_PIN 3        // Change later when arduino arrives      
->>>>>>> dd576ce5fc08e2a5cf424ae5ee4060657d31ea36
 #define LED_TYPE WS2812B  // Type of the LED strip
 #define BRIGHTNESS 120   // MIN [0 -> 255] MAX
 #define SATURATION 255    // MIN [0 -> 255] MAX
 #define HUE 255           // to cycle throw HUE
 #define SPEED 25          // Speed of the animation
-#define HUE_STEP 5        // [step to change r || g || b every 51 LED's] bigger step faster HUE repeat in less LED's. Step must me HUE_STEP / HUE = SOLID NUMBEr (without ".num")
-
-/*
-        HUE_STEP is how fast the rainbow changes the gamma of rgb
-        ---------------------------------------------------------
-
-#define HUE_STEP 17    [more bigger step to change r || g || b every 15 LED's] - VERY FAST
-#define HUE_STEP 1     [less big step to change r || g || b every 255 LED's] - VERY SLOW
-*/
 
 //define global variabel's
 CRGB leds[NUM_LEDS]; // define the array of the LED's
@@ -59,11 +45,13 @@ void setup()
     FastLED.setBrightness(BRIGHTNESS);
 }
 
+/*
+loop for main events 
+*/
 void loop()
 {
-    leds[1] = 
-    rainbowWaveLoop();
-
+    rainbowWave();
+    //rainbowFireBall();
 }
 
 /*
@@ -79,23 +67,8 @@ void check()
     delay(25)
 }
 
-
-/*
-loop for main events 
-*/
-<<<<<<< HEAD
-void rainbowWaveLoop()
-=======
-void loop()
-{
-    rainbowWave();      // Rainbow effect DONE!
-    // rainbowFireBall();   temporarily not working
-
-}
-
 //define event rainbowWave1
 void rainbowWave()
->>>>>>> dd576ce5fc08e2a5cf424ae5ee4060657d31ea36
 {
     // Cycle hue
     for (int i = 0; i < HUE; i++)
