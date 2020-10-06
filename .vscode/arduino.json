@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "AVRISP mkII",
+    "port": "COM3",
+    "sketch": "LEDv1.1.ino"
+}
