@@ -14,23 +14,19 @@ coded by:
 
 */
 
-// Including needed librarays
 #include <FastLED.h>
 #include <Arduino.h>
 #include <colorpalettes.h>
 #include <pixeltypes.h>
+
 #include <hsv2rgb.h>
 #include <colorpalettes.h>
 
-// Defining un-changeabel variabels
 #define FALSE 0
 #define TRUE !FALSE
-#define HIGH 1           // ON mode
-#define LOW 0            // OFF mode
-#define NUM_LEDS 301     // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
-#define LED_FADE 31      //
+#define NUM_LEDS 301 // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
+#define LED_FADE 31
 #define DATA_PIN 3       // Change later when arduino arrives
-#define POTI_PIN 0       // Potentiometer Data Pin [A0]
 #define LED_TYPE WS2812B // Type of the LED strip
 #define BRIGHTNESS 200   // MIN [0 -> 255] MAX
 #define SATURATION 255   // MIN [0 -> 255] MAX
@@ -38,17 +34,29 @@ coded by:
 #define SPEED 25         // Speed of the animation
 #define HUE_STEP 5       // [step to change red || green || blue every 51 LED's] bigger step faster HUE repeat in less LED's. Step must me HUE_STEP / HUE = SOLID NUMBEr (without ".num")
 
-// Defining functions
+/*
+        HUE_STEP is how fast the rainbow changes the gamma of rgb
+        ---------------------------------------------------------
+
+#define HUE_STEP 17    [more bigger step to change red || green || blue every 15 LED's] - VERY FAST
+#define HUE_STEP 1     [less big step to change red || green || blue every 255 LED's] - VERY SLOW
+*/
+
+
 void rainbowWave1();
 void both();
 void black();
+void potiCheck();
 
-// Global variabels
-int count = 0;       // flag to clear leds at first startup... upgrade soon...
+//future add...
+//void displayInfo();
+
+
+int count = 0;
 CRGB leds[NUM_LEDS]; // define the array of the LED's
 
 /*
-Setup the parmeters of the led strip for the library    
+Setup the parmeters of the LED strip for the library    
 input: parameter's of the LED Strip
 output: None 
 */
@@ -58,7 +66,9 @@ void setup()
     FastLED.setBrightness(BRIGHTNESS);
 }
 
-//loop for main events
+/*
+loop for main events 
+*/
 void loop()
 {
     black();
@@ -94,12 +104,13 @@ void both()
             leds[j - 10].setRGB(0, 0, 0);
         }
 
+        potiCheck();
         FastLED.show();
         delay(SPEED);
     }
 }
 
-//define event rainbowWave1
+// define event rainbowWave1
 void rainbowWave1()
 {
     // Cycle hue
@@ -112,6 +123,8 @@ void rainbowWave1()
             leds[j] = CHSV(j - (i * 2), SATURATION, BRIGHTNESS); /* The higher the value 4 the less fade there is and vice versa */
         }
 
+        potiCheck();
+
         // send data to the led strip and make the LED show the NOW color
         FastLED.show();
 
@@ -119,3 +132,21 @@ void rainbowWave1()
         delay(SPEED); // The lower the value the faster the wave move's (and vice versa)
     }
 }
+
+void potiCheck()
+{
+    int potiVal = analogRead(POTI_PIN);
+    int brightVal = map(potiVal, 0, 1023, 0, 255);
+    FastLED.setBrightness(brightVal);
+}
+
+/* future add...
+
+void displayInfo()
+{
+
+
+
+}
+
+*/
