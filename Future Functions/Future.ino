@@ -80,7 +80,7 @@ void both();
 void black();
 void potiCheck();
 void displayInfo();
-
+void purp();
 
 int count = 0;
 int brightVal = 0;
@@ -120,6 +120,14 @@ void black()
             leds[i].setRGB(0, 0, 0);
         }
         count++;
+    }
+}
+
+void purp()
+{
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+        leds[i].setRGB(119, 0, 255);
     }
 }
 
