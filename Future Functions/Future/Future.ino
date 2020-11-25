@@ -27,8 +27,14 @@ coded by:
 
 // LCD Display
 #include <LiquidCrystal.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Wire.h>
 
-/*  
+/*
+    LCD DISPLAY OUTPIN CIRCUIT
+   --------------------
+
   The circuit:
  * LCD RS pin to digital pin 12
  * LCD Enable pin to digital pin 11
@@ -42,6 +48,18 @@ coded by:
  * 10K resistor:
  * ends to +5V and ground
  * wiper to LCD VO pin (pin 3)
+*/
+
+/*
+    OLED DISPLAY OUTPIN CIRCUIT
+    The circuit:
+    *
+    * 
+    * 
+    * 
+    * 
+    * 
+    * 
 */
 
 #define FALSE 0
@@ -74,19 +92,24 @@ coded by:
 
 */
 
-
-void rainbowWave1();
-void both();
-void black();
+// FUNCTION'S DEFINE
 void potiCheck();
-void displayInfo();
+void OLEDisplayShowInfo();
+void LCDisplayInfo();
+void black();
+void rainbowWave1();
 void purp();
+void both();
 
+// GLOBAL VARIABELS 
 int count = 0;
 int brightVal = 0;
+
+
+// ADD-ON'S SETUP
 CRGB leds[NUM_LEDS];                        // define the array of the LED's
 LiquidCrystal lcd(RS, EN, D4, D5, D6, D7);  // define pinout of LCD display
-
+Adafruit_SSD1306 display = Adafruit_SSD1306(128, 32, &OledPin);
 
 /*
 Setup the parmeters of the LED strip for the library    
@@ -95,7 +118,8 @@ output: None
 */
 void setup()
 {
-    FastLED.addLeds<LED_TYPE, DATA_PIN>(leds, NUM_LEDS);
+    Serial.begin(9600);
+    FastLED.addLeds<LED_TYPE, DATA_PIN, GRB>(leds, NUM_LEDS);
     FastLED.setBrightness(BRIGHTNESS);
     lcd.begin(16, 2);
 }
@@ -123,11 +147,13 @@ void black()
     }
 }
 
+
+// PURPLE COLOR OUTPUT FUNCTION
 void purp()
 {
     for (int i = 0; i < NUM_LEDS; i++)
     {
-        leds[i].setRGB(119, 0, 255);
+        leds[i].setRGB(255, 0, 255);
     }
 }
 
@@ -163,6 +189,7 @@ void rainbowWave1()
         {
             // setting led color, brightness, and saturation
             leds[j] = CHSV(j - (i * 2), SATURATION, BRIGHTNESS); /* The higher the value 4 the less fade there is and vice versa */
+            Serial.write(j - (i * 2));
         }
 
         potiCheck();
@@ -187,4 +214,18 @@ void displayInfo()
 {
     lcd.print("Brightness is: " + brightVal);
 }
+
+
+void oledDisplayShowInfo()
+{
+
+
+
+
+
+
+}
+
+
+
 

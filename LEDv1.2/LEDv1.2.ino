@@ -28,15 +28,14 @@ coded by:
 #define HIGH 1           // ON mode
 #define LOW 0            // OFF mode
 #define NUM_LEDS 301     // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
-#define LED_FADE 87      //
+#define LED_FADE 87
 #define DATA_PIN 3       // Change later when arduino arrives
 #define POTI_PIN 0       // Potentiometer Data Pin [A0]
 #define LED_TYPE WS2812B // Type of the LED strip
-#define BRIGHTNESS 150   // MIN [0 -> 255] MAX
+#define BRIGHTNESS 100   // MIN [0 -> 255] MAX
 #define SATURATION 255   // MIN [0 -> 255] MAX
 #define HUE 255          // to cycle throw HUE
-#define SPEED 25         // Speed of the animation
-#define HUE_STEP 5       // [step to change red || green || blue every 51 LED's] bigger step faster HUE repeat in less LED's. Step must me HUE_STEP / HUE = SOLID NUMBEr (without ".num")
+#define SPEED 25         // Speed of refreshing the animation
 
 // Defining functions
 void rainbowWave1();
@@ -55,6 +54,7 @@ output: None
 */
 void setup()
 {
+    Serial.begin(9600);
     FastLED.addLeds<LED_TYPE, DATA_PIN, GRB>(leds, NUM_LEDS);
     FastLED.setBrightness(BRIGHTNESS);
 }
@@ -81,6 +81,16 @@ void black()
     }
 }
 
+void purp()
+{
+  for(int i = 0; i < LED_FADE; i++)
+  {
+    leds[i] = CRGB::Purple; 
+  }
+  FastLED.show();
+  delay(SPEED);
+}
+
 // runing strip of 9 LEDs from both ends.
 void both()
 {
@@ -101,14 +111,6 @@ void both()
     }
 }
 
-void purp()
-{
-    for (int i = 0; i < NUM_LEDS; i++)
-    {
-        leds[i].setRGB(255, 0, 255);
-    }
-}
-
 //define event rainbowWave1
 void rainbowWave1()
 {
@@ -119,7 +121,7 @@ void rainbowWave1()
         for (int j = 0; j < LED_FADE; j++)
         {
             // setting led color, brightness, and saturation
-            leds[j] = CHSV(j - (i * 2), SATURATION, BRIGHTNESS); /* The higher the value 4 the less fade there is and vice versa */
+            leds[j] = CHSV(j - (i * 2), SATURATION, BRIGHTNESS); /* The higher the value 4 the less fade there is and vice versa */ 
         }
 
         // send data to the led strip and make the LED show the NOW color
