@@ -1,0 +1,16 @@
+{
+    "C_Cpp.errorSquiggles": "Disabled",
+    "cSpell.ignoreWords": [
+        "adafruit",
+        "crgb",
+        "leds",
+        "n'adafruit",
+        "oled",
+        "poti",
+        "println",
+        "purp",
+        "setup",
+        "ssid",
+        "switchcapvcc"
+    ]
+}

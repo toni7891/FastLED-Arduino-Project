@@ -62,6 +62,8 @@ coded by:
     * 
 */
 
+// LED Data variabels 
+
 #define FALSE 0
 #define TRUE !FALSE
 #define NUM_LEDS 301     // Number of LED's in the strip [ 5 meter * 60 LED's per meter = 300 LED's in the whole strip  ] 300+1 for the array
@@ -74,6 +76,7 @@ coded by:
 #define SPEED 25         // Speed of the animation
 
 // LCD pinout 
+
 #define RS 12
 #define EN 11
 #define D4 5
@@ -81,30 +84,35 @@ coded by:
 #define D6 3
 #define D7 2
 
-/*
-        HUE_STEP is how fast the rainbow changes the gamma of rgb
-        ---------------------------------------------------------
-                       *bigger step - less smooth              
+// Rotary potentiometer with push button Pinout
 
-#define HUE_STEP 5     [step to change red || green || blue every 51 LED's] bigger step faster HUE repeat in less LED's. Step must me HUE_STEP / HUE = SOLID NUMBEr (without ".num")
-#define HUE_STEP 17    [more bigger step to change red || green || blue every 15 LED's] - VERY FAST
-#define HUE_STEP 1     [less big step to change red || green || blue every 255 LED's] - VERY SLOW
-
-*/
+#define Clock 9 //Clock pin connected to D9
+#define Data 8  //Data pin connected to D8
+#define Push 10 //Push button pin connected to D10
 
 // FUNCTION'S DEFINE
-void potiCheck();
-void OLEDisplayShowInfo();
+void PotiSetup();
+void OLEDisplaySETUP();
+void PotiCheckVal() 
+void OLEDisplayINFO();
 void LCDisplayInfo();
 void black();
 void rainbowWave1();
 void purp();
 void both();
 
+
 // GLOBAL VARIABELS 
 int count = 0;
 int brightVal = 0;
 
+// Rotary potentiometer with push button Data variabels to store in
+
+int counter = 0;                   //Use this variable to store "steps"
+int currentStateClock;             //Store the status of the clock pin (HIGH or LOW)
+int lastStateClock;                //Store the PREVIOUS status of the clock pin (HIGH or LOW)
+String currentDir = "";            //Use this to print text
+unsigned long lastButtonPress = 0; //Use this to store if the push button was pressed or not
 
 // ADD-ON'S SETUP
 CRGB leds[NUM_LEDS];                        // define the array of the LED's
@@ -122,6 +130,9 @@ void setup()
     FastLED.addLeds<LED_TYPE, DATA_PIN, GRB>(leds, NUM_LEDS);
     FastLED.setBrightness(BRIGHTNESS);
     lcd.begin(16, 2);
+    OLEDisplaySETUP();
+    PotiSetup();
+    lastStateClock = digitalRead(Clock);
 }
 
 /*
@@ -202,13 +213,68 @@ void rainbowWave1()
     }
 }
 
-void potiCheck()
+void PotiSetup()
 {
-    int potiVal = analogRead(A0);
-    brightVal = map(potiVal, 0, 1023, 0, 255);
-    FastLED.setBrightness(brightVal);
-    displayInfo();
+    pinMode(Clock, INPUT_PULLUP);
+    pinMode(Data, INPUT_PULLUP);
+    pinMode(Push, INPUT_PULLUP);
+    
 }
+
+void PotiCheckVal()
+{
+    // Read the current state of CLOCK
+    currentStateClock = digitalRead(Clock);
+
+    // If last and current state of Clock are different, then "pulse occurred"
+    // React to only 1 state change to avoid double count
+    if (currentStateClock != lastStateClock && currentStateClock == 1)
+    {
+
+        // If the Data state is different than the Clock state then
+        // the encoder is rotating "CCW" so we decrement
+        if (digitalRead(Data) != currentStateClock)
+        {
+            counter--;
+            currentDir = "Counterclockwise";
+        }
+        else
+        {
+            // Encoder is rotating CW so increment
+            counter++;
+            currentDir = "Clockwise";
+        }
+
+        Serial.print("Direction: ");
+        Serial.print(currentDir);
+        Serial.print(" | Counter: ");
+        Serial.println(counter);
+    }
+
+    // We save last Clock state for next loop
+    lastStateClock = currentStateClock;
+
+    // Read the button state
+    int btnState = digitalRead(Push);
+
+    //If we detect LOW signal, button is pressed
+    if (btnState == LOW)
+    {
+        //if 50ms have passed since last LOW pulse, it means that the
+        //button has been pressed, released and pressed again
+        if (millis() - lastButtonPress > 50)
+        {
+            Serial.println("Button pressed!");
+        }
+
+        // Remember last button press event
+        lastButtonPress = millis();
+    }
+
+    // Put in a slight delay to help debounce the reading
+    delay(1);
+}
+
 
 void displayInfo()
 {
@@ -216,16 +282,33 @@ void displayInfo()
 }
 
 
-void oledDisplayShowInfo()
+void OLEDisplaySETUP()
 {
-
-
-
-
-
-
+    Serial.println("OLED FeatherWing test");
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+    Serial.println("OLED begun");
+    display.display();
+    delay(1000);
+    display.clearDisplay();
+    display.display();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(0, 0);
+    display.print("Connecting to SSID\n'adafruit':");
+    display.print("connected!");
+    display.println("IP: 10.0.1.23");
+    display.println("Sending val #0");
+    display.setCursor(0, 0);
+    display.display();
+    Serial.println("OLED Display working correctly!");
 }
 
+void OLEDisplayINFO()
+{
 
+    display.print("Brightness is: " + brightVal);
+    delay(10);
+    display.display();
 
+}
 

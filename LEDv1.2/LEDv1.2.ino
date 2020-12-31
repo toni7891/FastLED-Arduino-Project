@@ -32,7 +32,7 @@ coded by:
 #define DATA_PIN 3       // Change later when arduino arrives
 #define POTI_PIN 0       // Potentiometer Data Pin [A0]
 #define LED_TYPE WS2812B // Type of the LED strip
-#define BRIGHTNESS 100   // MIN [0 -> 255] MAX
+#define BRIGHTNESS 150   // MIN [0 -> 255] MAX
 #define SATURATION 255   // MIN [0 -> 255] MAX
 #define HUE 255          // to cycle throw HUE
 #define SPEED 25         // Speed of refreshing the animation
@@ -63,8 +63,8 @@ void setup()
 void loop()
 {
     black();
-    purp();
-    //rainbowWave1();
+    //purp();
+    rainbowWave1();
     //both();
 }
 
