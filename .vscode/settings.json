@@ -1,11 +1,14 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
     "cSpell.ignoreWords": [
+        "activ",
         "adafruit",
         "crgb",
         "leds",
         "n'adafruit",
         "oled",
+        "potentiometer",
+        "potentiometer's",
         "poti",
         "println",
         "purp",
